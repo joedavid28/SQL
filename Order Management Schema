@@ -1,0 +1,13 @@
+Write a query to display order_id and volume of the biggest order (in terms of volume) that can fit in carton id 10 
+--(1 row)[NOTE: TABLES to be used - CARTON, ORDER_ITEMS, PRODUCT]
+
+SELECT MAX(TMPPRODUCTJOCY.VOLU)
+--(cartonjocy.LEN*cartonjocy.WIDTH*cartonjocy.HEIGHT) AS CARTON_VOL
+FROM cartonjocy
+INNER JOIN (SELECT Order_items.ORDER_ID, SUM(productjocy.LEN*productjocy.WIDTH*productjocy.HEIGHT) AS VOLU
+FROM productjocy INNER JOIN order_items
+ON Productjocy.product_ID = order_items.product_ID
+Group By Order_items.ORDER_ID
+)
+AS TMPPRODUCTJOCY ON TMPPRODUCTJOCY.VOLU <= (cartonjocy.LEN*cartonjocy.WIDTH*cartonjocy.HEIGHT)
+WHERE CARTONJOCY.CARTON_ID =10
